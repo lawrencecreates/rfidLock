@@ -1,0 +1,13 @@
+body{
+	font-family:arial;
+}
+
+table{
+	border: 1px;
+	border-collapse:collapse;
+} 
+
+td{
+	border: 1px;
+	text-align:center;
+}
