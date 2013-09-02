@@ -1,21 +1,3 @@
-<!--
-    # RFID Lock Project 
-    # Copyright (C) 2013  Ben Barker
-
-    # This program is free software: you can redistribute it and/or modify
-    # it under the terms of the GNU Affero General Public License as published by
-    # the Free Software Foundation, either version 3 of the License, or
-    # (at your option) any later version.
-
-    # This program is distributed in the hope that it will be useful,
-    # but WITHOUT ANY WARRANTY; without even the implied warranty of
-    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    # GNU Affero General Public License for more details.
-
-    # You should have received a copy of the GNU Affero General Public License
-    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
--->
 <head>
         <link rel="stylesheet" type="text/css" href="style.css">
         <title>Lab Access Control</title>
@@ -24,7 +6,7 @@
 </head>
 <div align='center'>
 <?
-$con = mysql_connect("localhost","root","raspberry");
+$con = mysql_connect("localhost","root","raspberrypi");
 mysql_select_db("lab_access",$con);
 
 $qry="SELECT time,userid,firstname,lastname,message FROM audit LEFT JOIN users ON userid=code ORDER BY time DESC LIMIT 100";

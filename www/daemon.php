@@ -1,33 +1,17 @@
 <?php
-    # RFID Lock Project 
-    # Copyright (C) 2013  Ben Barker
-
-    # This program is free software: you can redistribute it and/or modify
-    # it under the terms of the GNU Affero General Public License as published by
-    # the Free Software Foundation, either version 3 of the License, or
-    # (at your option) any later version.
-
-    # This program is distributed in the hope that it will be useful,
-    # but WITHOUT ANY WARRANTY; without even the implied warranty of
-    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    # GNU Affero General Public License for more details.
-
-    # You should have received a copy of the GNU Affero General Public License
-    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-require_once("/var/www/functions.php");
-require_once("/var/www/php_serial.class.php");
-require_once("/var/www/GPIO.php");
+require_once("functions.php");
+require_once("php_serial.class.php");
+require_once("GPIO.php");
 
 ####################################
 # Define the GPIO pins we are using
 ####################################
-define("RED", 7);
-define("GREEN", 8);
-define("BUZZER", 25);
-define("DOOR", 24);
+define("RED", 7); // CE1
+define("GREEN", 8); // CE0
+define("BUZZER", 25); // #25
+define("DOOR", 24); // #24
 
-define("BUTTON", 18);
+define("BUTTON", 18); //
 define("DOOR_STATE", 22);
 define("ALARM", 15);
 ####################################
@@ -53,7 +37,8 @@ $gpio->setup(DOOR_STATE, "in");
 
 $serial = new phpSerial;
 $serial->deviceSet("/dev/ttyAMA0");
-$serial->confBaudRate(19200);
+//$serial->confBaudRate(19200);
+$serial->confBaudRate(115200);
 $serial->confFlowControl("none");
 $serial->confCharacterLength(8);
 $serial->confParity("none");
@@ -96,12 +81,16 @@ while(1){
 	#After a code has been received, we don't want any more codes until the card has been removed at least once...
 	#BUT....we do want to read all UIDs currently in the rf field...
 	$code=getID($serial);
+	$cnt_loop++;
+	echo $cnt_loop."> '";
+	print_r($code);
+	echo "'\n";
 	if($code==-1)
 		$wallet = array(); #Empty our "wallet" list
 	
 	if($code !="-1" && !array_key_exists($code,$wallet)){
 		$wallet[$code]="";
-		$con = mysql_connect("localhost","root","raspberry");
+		$con = mysql_connect("localhost","root","raspberrypi");
 		mysql_select_db("lab_access",$con);
 		
 		$qry="SELECT COUNT(*) FROM users WHERE active=TRUE AND code='".$code."'";           		
